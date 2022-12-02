@@ -7,7 +7,9 @@ import (
 	"log"
 	"os"
 	"strconv"
+
 	"github.com/samber/lo"
+	"golang.org/x/exp/slices"
 )
 
 func main() {
@@ -19,8 +21,8 @@ func main() {
 
   defer file.Close()
 
-  var buf bytes.Buffer
-  tee := io.TeeReader(file, &buf)
+  var buffer bytes.Buffer
+  tee := io.TeeReader(file, &buffer)
 
   part1Answer, err := part1(tee)
   if err != nil {
@@ -28,11 +30,32 @@ func main() {
   }
 
   log.Println(part1Answer)
+
+  part2Answer, err := part2(&buffer)
+  if err != nil {
+    log.Fatal(err)
+  }
+
+  log.Println(part2Answer)
 }
 
 func part1(reader io.Reader) (int, error) {
   calories := getCalories(reader)
   return lo.Max(calories), nil
+}
+
+func part2(reader io.Reader) (int, error) {
+  calories := getCalories(reader)
+
+  slices.Sort(calories)
+
+  total := 0
+
+  for _, i := range calories[len(calories)-3:] {
+    total += i
+  }
+
+  return total, nil
 }
 
 func getCalories(reader io.Reader) []int {
