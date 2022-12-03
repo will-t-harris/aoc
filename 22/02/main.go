@@ -16,9 +16,9 @@ import (
 // C -> Scissors
 
 //// Column 2
-// X -> Rock
-// Y -> Paper
-// Z -> Scissors
+// X -> Rock --> I need to lose
+// Y -> Paper --> I need to draw
+// Z -> Scissors --> I need to win
 
 //// Shape points
 // Rock -> 1 point
@@ -45,7 +45,9 @@ func main() {
 	scanner := bufio.NewScanner(teeReader)
 	scanner.Split(bufio.ScanLines)
 
-	total := 0
+	part1Total := 0
+	part2Total := 0
+
 	for scanner.Scan() {
 		scanner.Bytes()
 
@@ -54,41 +56,64 @@ func main() {
 		opponentGuess := strings.TrimRight(round[0], "\n")
 		myGuess := strings.TrimRight(round[1], "\n")
 
+		part1Total += calculateScore(myGuess, opponentGuess)
+
 		if opponentGuess == "A" {
 			if myGuess == "X" {
-				total += 4
+				myGuess = "Z"
 			} else if myGuess == "Y" {
-				total += 8
-			} else if myGuess == "Z" {
-				total += 3
+				myGuess = "X"
+			} else {
+				myGuess = "Y"
 			}
 		} else if opponentGuess == "B" {
 			if myGuess == "X" {
-				total += 1
+				myGuess = "X"
 			} else if myGuess == "Y" {
-				total += 5
-			} else if myGuess == "Z" {
-				total += 9
+				myGuess = "Y"
+			} else {
+				myGuess = "Z"
 			}
-		} else if opponentGuess == "C" {
+		} else {
 			if myGuess == "X" {
-				total += 7
+				myGuess = "Y"
 			} else if myGuess == "Y" {
-				total += 2
-			} else if myGuess == "Z" {
-				total += 6
+				myGuess = "Z"
+			} else {
+				myGuess = "X"
 			}
 		}
+
+		part2Total += calculateScore(myGuess, opponentGuess)
 	}
-	fmt.Println(total)
+	fmt.Println("Part 1: ", part1Total)
+	fmt.Println("Part 2: ", part2Total)
 }
 
-// func part1(reader io.Reader) string[] {
-//   scanner := bufio.NewScanner(reader)
-//   scanner.Split(bufio.ScanLines)
-//
-//   for scanner.Scan() {
-//     scanner.Bytes()
-//     fmt.Println(scanner.Text())
-//   }
-// }
+func calculateScore(myGuess string, opponentGuess string) int {
+	if opponentGuess == "A" {
+		if myGuess == "X" {
+			return 4
+		} else if myGuess == "Y" {
+			return 8
+		} else {
+			return 3
+		}
+	} else if opponentGuess == "B" {
+		if myGuess == "X" {
+			return 1
+		} else if myGuess == "Y" {
+			return 5
+		} else {
+			return 9
+		}
+	} else {
+		if myGuess == "X" {
+			return 7
+		} else if myGuess == "Y" {
+			return 2
+		} else {
+			return 6
+		}
+	}
+}
