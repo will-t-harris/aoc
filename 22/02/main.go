@@ -49,8 +49,6 @@ func main() {
 	part2Total := 0
 
 	for scanner.Scan() {
-		scanner.Bytes()
-
 		round := strings.Fields(scanner.Text())
 
 		opponentGuess := strings.TrimRight(round[0], "\n")
